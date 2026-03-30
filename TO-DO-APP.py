@@ -34,6 +34,9 @@ class ListaZadan:
 
 
     def wyswietl_liste_zadan(self):
+        if not self.lista_zadan:
+            print("Lista zadań jest pusta")
+            return
         print("Lista zadań: ")
         for i, j in enumerate(self.lista_zadan):
             print(f"{i + 1}. {j.nazwa_zadania} - {j.status_zadania}")
