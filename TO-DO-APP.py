@@ -76,8 +76,14 @@ class ListaZadan:
 print("Witamy w programie do zarządzania zadaniami")
 lista_zadan = ListaZadan()
 while True:
-    print("1.Dodaj zadanie \n2.Usuń zadanie \n3.Zmień status zadania \n4.Wyświetl listę zadań \n5.Zakończ program")
-    wybor = int(input("Podaj swój wybór: "))
+    try:
+        wybor = int(input("Podaj swój wybór: "))
+        if wybor not in [1, 2, 3, 4, 5]:
+            print("Niepoprawny wybór, podaj liczbę od 1 do 5")
+            continue
+        break
+    except ValueError:
+        print("Niepoprawny wybór, podaj liczbę od 1 do 5")
     if wybor == 1:
         nazwa_zadania = input("Podaj nazwę zadania: ")
         status_zadania = input("Podaj status zadania: ")
