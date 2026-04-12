@@ -84,22 +84,35 @@ while True:
     except ValueError:
         print("Niepoprawny wybór, podaj liczbę od 1 do 5")
         continue
+
     if wybor == 1:
         nazwa_zadania = input("Podaj nazwę zadania: ")
         status_zadania = input("Podaj status zadania: ")
         zadanie = Zadanie(nazwa_zadania, status_zadania)
         print(lista_zadan.dodaj_zadanie(zadanie))
+
     elif wybor == 2:
         lista_zadan.wyswietl_liste_zadan()
-        indeks_zadania = (int(input("Podaj numer zadania, które chcesz usunąć: "))) - 1
+        try:
+            indeks_zadania = int(input("Podaj numer zadania, które chcesz usunąć: ")) - 1
+        except ValueError:
+            print("Niepoprawny numer")
+            continue
         print(lista_zadan.usun_zadanie(indeks_zadania))
+
     elif wybor == 3:
         lista_zadan.wyswietl_liste_zadan()
-        indeks_zadania = (int(input("Podaj numer zadania, status którego chcesz zmienić: "))) - 1
+        try:
+            indeks_zadania = int(input("Podaj numer zadania, status którego chcesz zmienić: ")) - 1
+        except ValueError:
+            print("Niepoprawny numer")
+            continue
         nowy_status_zadania = input("Podaj status zadania: ")
         print(lista_zadan.zmien_status_zadania(indeks_zadania, nowy_status_zadania))
+
     elif wybor == 4:
         lista_zadan.wyswietl_liste_zadan()
+
     elif wybor == 5:
         lista_zadan.zamknij_polaczenie()
         print("Do zobaczenia")
