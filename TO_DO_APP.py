@@ -1,14 +1,16 @@
 import sqlite3
+from datetime import datetime
 
 
 class Zadanie:
-    def __init__(self, nazwa_zadania, status_zadania, db_id=None):
+    def __init__(self, nazwa_zadania, status_zadania, created_at, db_id=None):
         self.id = db_id
         self.nazwa_zadania = nazwa_zadania
         self.status_zadania = status_zadania
+        self.created_at = created_at
 
     def opis(self):
-        return f"Zadanie \"{self.nazwa_zadania}\" jest {self.status_zadania}"
+        return f"Zadanie \"{self.nazwa_zadania}\" jest {self.status_zadania}. Utworzono {self.created_at}"
 
 
 class ListaZadan:
@@ -19,7 +21,8 @@ class ListaZadan:
             CREATE TABLE IF NOT EXISTS zadania (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 nazwa_zadania TEXT UNIQUE,
-                status_zadania TEXT
+                status_zadania TEXT,
+                created_at DATETIME 
             )
         ''')
         self.conn.commit()
@@ -31,8 +34,8 @@ class ListaZadan:
 
     def dodaj_zadanie(self, zadanie):
         try:
-            self.cursor.execute("INSERT INTO zadania (nazwa_zadania, status_zadania) VALUES (?, ?)",
-                                (zadanie.nazwa_zadania, zadanie.status_zadania))
+            self.cursor.execute("INSERT INTO zadania (nazwa_zadania, status_zadania, created_at) VALUES (?, ?, ?)",
+                                (zadanie.nazwa_zadania, zadanie.status_zadania, zadanie.created_at))
             self.conn.commit()
             return f"Zadanie \"{zadanie.nazwa_zadania}\" zostało dodane do bazy zadań"
         except sqlite3.IntegrityError:
@@ -88,7 +91,8 @@ if __name__ == "__main__":
         if wybor == 1:
             nazwa_zadania = input("Podaj nazwę zadania: ")
             status_zadania = input("Podaj status zadania: ")
-            zadanie = Zadanie(nazwa_zadania, status_zadania)
+            created_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            zadanie = Zadanie(nazwa_zadania, status_zadania, created_at)
             print(lista_zadan.dodaj_zadanie(zadanie))
     
         elif wybor == 2:
