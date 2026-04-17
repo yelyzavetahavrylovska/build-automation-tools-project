@@ -1,7 +1,6 @@
 import unittest
 import os
-# Importujemy klasy z Twojego pliku. 
-# Zakładam, że Twój plik nazywa się TO_DO_APP.py
+
 from TO_DO_APP import Zadanie, ListaZadan
 
 class TestAplikacjiTodo(unittest.TestCase):
