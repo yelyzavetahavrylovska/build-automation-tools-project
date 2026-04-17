@@ -10,7 +10,7 @@ class Zadanie:
         self.created_at = created_at or datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     def opis(self):
-        return f'Zadanie "{self.nazwa_zadania}" jest {self.status_zadania}. Utworzono {self.created_at}'
+        return f'Zadanie "{self.nazwa_zadania}" jest {self.status_zadania}'
 
 
 class ListaZadan:
