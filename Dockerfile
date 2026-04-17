@@ -1,4 +1,7 @@
 FROM python:3.14
+
 WORKDIR /app
-COPY .. .
-CMD ["python", "TO-DO-APP.py"]
+
+COPY . .
+
+CMD ["python", "TO_DO_APP.py"]

@@ -122,7 +122,4 @@ if __name__ == "__main__":
             print("Do zobaczenia")
             break
             
-    if __name__ == "__main__":
-        print("Witamy w programie do zarządzania zadaniami")
-        lista_zadan = ListaZadan()
-        while True:
+
