@@ -3,10 +3,11 @@ from datetime import datetime
 
 
 class Zadanie:
-    def __init__(self, nazwa_zadania, status_zadania, created_at=None, db_id=None):
+    def __init__(self, nazwa_zadania, status_zadania, priorytet="Normalny", created_at=None, db_id=None):
         self.id = db_id
         self.nazwa_zadania = nazwa_zadania
         self.status_zadania = status_zadania
+        self.priorytet = priorytet
         self.created_at = created_at or datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     def opis(self):
@@ -22,21 +23,26 @@ class ListaZadan:
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 nazwa_zadania TEXT UNIQUE,
                 status_zadania TEXT,
+                priorytet TEXT,
                 created_at TEXT
             )
         ''')
+        try:
+            self.cursor.execute("ALTER TABLE zadania ADD COLUMN priorytet TEXT DEFAULT 'Normalny'")
+        except sqlite3.OperationalError:
+            pass
         self.conn.commit()
 
     def pobierz_zadania(self):
-        self.cursor.execute("SELECT id, nazwa_zadania, status_zadania, created_at FROM zadania")
+        self.cursor.execute("SELECT id, nazwa_zadania, status_zadania, priorytet, created_at FROM zadania")
         rows = self.cursor.fetchall()
-        return [Zadanie(row[1], row[2], row[3], row[0]) for row in rows]
+        return [Zadanie(row[1], row[2], row[3], row[4], row[0]) for row in rows]
 
     def dodaj_zadanie(self, zadanie):
         try:
             self.cursor.execute(
-                "INSERT INTO zadania (nazwa_zadania, status_zadania, created_at) VALUES (?, ?, ?)",
-                (zadanie.nazwa_zadania, zadanie.status_zadania, zadanie.created_at)
+                "INSERT INTO zadania (nazwa_zadania, status_zadania, priorytet, created_at) VALUES (?, ?, ?, ?)",
+                (zadanie.nazwa_zadania, zadanie.status_zadania, zadanie.priorytet, zadanie.created_at)
             )
             self.conn.commit()
             return f'Zadanie "{zadanie.nazwa_zadania}" zostało dodane do bazy zadań'
@@ -77,7 +83,20 @@ class ListaZadan:
 
         print("Lista zadań:")
         for i, z in enumerate(zadania):
-            print(f"{i + 1}. {z.nazwa_zadania} - {z.status_zadania}")
+            print(f"{i + 1}. {z.nazwa_zadania} [{z.priorytet}] - {z.status_zadania} [Utworzono: {z.created_at}]")
+
+    def szukaj_zadania(self, fraza):
+        self.cursor.execute("SELECT id, nazwa_zadania, status_zadania, priorytet, created_at FROM zadania WHERE nazwa_zadania LIKE ?", (f'%{fraza}%',))
+        rows = self.cursor.fetchall()
+        zadania = [Zadanie(row[1], row[2], row[3], row[4], row[0]) for row in rows]
+
+        if not zadania:
+            print(f"Nie znaleziono zadań pasujących do: {fraza}")
+            return
+
+        print(f"Wyniki wyszukiwania dla: {fraza}")
+        for i, z in enumerate(zadania):
+            print(f"{i + 1}. {z.nazwa_zadania} [{z.priorytet}] - {z.status_zadania} [Utworzono: {z.created_at}]")
 
     def zamknij_polaczenie(self):
         self.conn.close()
@@ -88,18 +107,19 @@ if __name__ == "__main__":
     lista_zadan = ListaZadan()
 
     while True:
-        print("\n1. Dodaj zadanie\n2. Usuń zadanie\n3. Zmień status\n4. Wyświetl listę\n5. Wyjdź")
+        print("\n1. Dodaj zadanie\n2. Usuń zadanie\n3. Zmień status\n4. Wyświetl listę\n5. Szukaj zadania\n6. Wyjdź")
 
         try:
             wybor = int(input("Podaj swój wybór: "))
         except ValueError:
-            print("Niepoprawny wybór, podaj liczbę od 1 do 5")
+            print("Niepoprawny wybór, podaj liczbę od 1 do 6")
             continue
 
         if wybor == 1:
             nazwa_zadania = input("Podaj nazwę zadania: ")
             status_zadania = input("Podaj status zadania: ")
-            zadanie = Zadanie(nazwa_zadania, status_zadania)
+            priorytet = input("Podaj priorytet (Niski, Normalny, Wysoki): ")
+            zadanie = Zadanie(nazwa_zadania, status_zadania, priorytet)
             print(lista_zadan.dodaj_zadanie(zadanie))
 
         elif wybor == 2:
@@ -126,6 +146,10 @@ if __name__ == "__main__":
             lista_zadan.wyswietl_liste_zadan()
 
         elif wybor == 5:
+            fraza = input("Podaj frazę do wyszukania: ")
+            lista_zadan.szukaj_zadania(fraza)
+
+        elif wybor == 6:
             lista_zadan.zamknij_polaczenie()
             print("Do zobaczenia")
             break
