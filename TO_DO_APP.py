@@ -120,8 +120,14 @@ if __name__ == "__main__":
             if not nazwa_zadania.strip():
                 print("Nazwa zadania nie może być pusta")
                 continue
-            status_zadania = input("Podaj status zadania: ")
-            priorytet = input("Podaj priorytet (Niski, Normalny, Wysoki): ")
+            status_zadania = input("Podaj status zadania(Nowe, Wykonane, W trakcie): ").lower()
+            if status_zadania not in ("nowe", "wykonane", "w trakcie"):
+                print("Nieprawidłowy status zadania. Wybierz: Nowe, Wykonane, W trakcie")
+                continue
+            priorytet = input("Podaj priorytet (Niski, Normalny, Wysoki): ").lower()
+            if priorytet not in ("niski", "normalny", "wysoki"):
+                print("Nieprawidłowy priorytet. Wybierz: Niski, Normalny lub Wysoki")
+                continue
             zadanie = Zadanie(nazwa_zadania, status_zadania, priorytet)
             print(lista_zadan.dodaj_zadanie(zadanie))
 
