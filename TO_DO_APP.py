@@ -117,6 +117,9 @@ if __name__ == "__main__":
 
         if wybor == 1:
             nazwa_zadania = input("Podaj nazwę zadania: ")
+            if not nazwa_zadania.strip():
+                print("Nazwa zadania nie może być pusta")
+                continue
             status_zadania = input("Podaj status zadania: ")
             priorytet = input("Podaj priorytet (Niski, Normalny, Wysoki): ")
             zadanie = Zadanie(nazwa_zadania, status_zadania, priorytet)
