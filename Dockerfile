@@ -1,7 +1,12 @@
-FROM python:3.14
+FROM python:3.14-slim
 
 WORKDIR /app
 
 COPY . .
 
-CMD ["python", "TO_DO_APP.py"]
+RUN useradd -m appuser && chown -R appuser:appuser /app
+
+USER appuser
+
+ENTRYPOINT ["python"]
+CMD ["TO_DO_APP.py"]
