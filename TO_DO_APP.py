@@ -25,7 +25,8 @@ class ListaZadan:
                 nazwa_zadania TEXT UNIQUE,
                 status_zadania TEXT,
                 priorytet TEXT,
-                created_at TEXT
+                created_at TEXT,
+                ended_at TEXT
             )
         ''')
         try:
