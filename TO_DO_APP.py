@@ -3,12 +3,13 @@ from datetime import datetime
 
 
 class Zadanie:
-    def __init__(self, nazwa_zadania, status_zadania, priorytet="Normalny", created_at=None, db_id=None):
+    def __init__(self, nazwa_zadania, status_zadania, priorytet="Normalny", created_at=None, ended_at=None ,db_id=None):
         self.id = db_id
         self.nazwa_zadania = nazwa_zadania
         self.status_zadania = status_zadania
         self.priorytet = priorytet
         self.created_at = created_at or datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        self.ended_at = ended_at
 
     def opis(self):
         return f'Zadanie "{self.nazwa_zadania}" jest {self.status_zadania}'
@@ -70,6 +71,11 @@ class ListaZadan:
                 "UPDATE zadania SET status_zadania = ? WHERE id = ?",
                 (nowy_status_zadania, zadanie.id)
             )
+            if nowy_status_zadania == 'wykonane':
+                self.cursor.execute(
+                    "UPDATE zadania SET ended_at = ? WHERE id = ?",
+                    (datetime.now().strftime("%Y-%m-%d %H:%M:%S"), zadanie.id)
+                )
             self.conn.commit()
             return f'Zmieniłeś status zadania na "{nowy_status_zadania}"'
 
