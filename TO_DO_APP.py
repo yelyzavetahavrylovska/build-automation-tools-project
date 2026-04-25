@@ -148,7 +148,10 @@ if __name__ == "__main__":
                 print("Niepoprawny numer")
                 continue
 
-            nowy_status = input("Podaj nowy status: ")
+            nowy_status = input("Podaj nowy status: ").lower()
+            if nowy_status not in ("nowe", "wykonane", "w trakcie"):
+                print("Nieprawidłowy status zadania. Wybierz: Nowe, Wykonane, W trakcie")
+                continue
             print(lista_zadan.zmien_status_zadania(indeks_zadania, nowy_status))
 
         elif wybor == 4:
