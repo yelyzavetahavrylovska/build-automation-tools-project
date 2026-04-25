@@ -4,6 +4,11 @@ import os
 from TO_DO_APP import Zadanie, ListaZadan
 
 class TestAplikacjiTodo(unittest.TestCase):
+    def setUp(self):
+        self.lista = ListaZadan(":memory:")
+
+    def tearDown(self):
+        self.lista.zamknij_polaczenie()
 
     def test_opis_zadania(self):
         """Sprawdza, czy opis zadania generuje się poprawnie."""
@@ -12,7 +17,7 @@ class TestAplikacjiTodo(unittest.TestCase):
 
     def test_dodawanie_zadania(self):
         """Sprawdza, czy zadanie jest poprawnie dodawane do bazy."""
-        lista = ListaZadan()
+        lista = self.lista
         nowe_zadanie = Zadanie("Testowe zadanie", "nowe")
         wynik = lista.dodaj_zadanie(nowe_zadanie)
         
@@ -22,15 +27,12 @@ class TestAplikacjiTodo(unittest.TestCase):
         # Sprawdzamy, czy fizycznie jest w bazie
         zadania = lista.pobierz_zadania()
         self.assertTrue(any(z.nazwa_zadania == "Testowe zadanie" for z in zadania))
-        
-        lista.zamknij_polaczenie()
 
     def test_usun_zadanie_nieistniejace(self):
         """Sprawdza reakcję na próbę usunięcia zadania o błędnym numerze."""
-        lista = ListaZadan()
+        lista = self.lista
         wynik = lista.usun_zadanie(999) # Numer, którego na pewno nie ma
         self.assertEqual(wynik, "Nie ma zadania z takim numerem")
-        lista.zamknij_polaczenie()
 
 if __name__ == '__main__':
     unittest.main()

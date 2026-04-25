@@ -15,8 +15,8 @@ class Zadanie:
 
 
 class ListaZadan:
-    def __init__(self):
-        self.conn = sqlite3.connect("zadania.db")
+    def __init__(self, db_path="zadania.db"):
+        self.conn = sqlite3.connect(db_path)
         self.cursor = self.conn.cursor()
         self.cursor.execute('''
             CREATE TABLE IF NOT EXISTS zadania (
