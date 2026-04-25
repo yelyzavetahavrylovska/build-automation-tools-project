@@ -8,7 +8,7 @@ class Zadanie:
         self.nazwa_zadania = nazwa_zadania
         self.status_zadania = status_zadania
         self.priorytet = priorytet
-        self.created_at = created_at or datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        self.created_at = created_at or datetime.now().strftime("%Y-%m-%d %H:%M")
         self.ended_at = ended_at
 
     def opis(self):
@@ -74,7 +74,7 @@ class ListaZadan:
             if nowy_status_zadania == 'wykonane':
                 self.cursor.execute(
                     "UPDATE zadania SET ended_at = ? WHERE id = ?",
-                    (datetime.now().strftime("%Y-%m-%d %H:%M:%S"), zadanie.id)
+                    (datetime.now().strftime("%Y-%m-%d %H:%M"), zadanie.id)
                 )
             self.conn.commit()
             return f'Zmieniłeś status zadania na "{nowy_status_zadania}"'
